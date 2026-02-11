@@ -49,11 +49,6 @@ def login(request):
 def add_user(request):
     if request.method != "POST":
         return JsonResponse({"error":"Only POST method allowed"},status=405)
-    if request.session.get("role") != "superadmin":
-        return JsonResponse(
-            {"error": "Permission denied"},
-            status=403
-        )
 
     try:
         data = json.loads(request.body)
@@ -90,11 +85,6 @@ def delete_user(request):
         return JsonResponse(
             {"error": "Only DELETE method allowed"},
             status=405
-        )
-    if request.session.get("role") != "superadmin":
-        return JsonResponse(
-            {"error": "Permission denied"},
-            status=403
         )
     try:
         data = json.loads(request.body)
@@ -183,6 +173,33 @@ def reactivate_user(request):
             status=500
         )
     
+
+@csrf_exempt
+@login_required_api
+def view_users(request):
+    if request.method != "GET":
+        return JsonResponse(
+            {"error": "Only DELETE method allowed"},
+            status=405
+        )
+    users = User.objects.filter(is_active=True)
+    if not users.exists():
+        return JsonResponse(
+            {"error": "No active users found"},
+            status=404
+        )
+    data = [
+        {
+            "id": user.id,
+            "email": user.email,
+            "role": user.role
+        }
+        for user in users
+    ]
+    return JsonResponse({"users":data},status=200)
+
+
+
 @csrf_exempt
 def logout(request):
     if request.method != "POST":
