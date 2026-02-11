@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from .models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password,check_password
-from .decorators import login_required_api
+from .decorators import login_required_api,role_required_api
 
 
 @csrf_exempt
@@ -45,6 +45,7 @@ def login(request):
 
 @csrf_exempt
 @login_required_api
+@role_required_api("superadmin")
 def add_user(request):
     if request.method != "POST":
         return JsonResponse({"error":"Only POST method allowed"},status=405)
@@ -83,6 +84,7 @@ def add_user(request):
 
 @csrf_exempt
 @login_required_api
+@role_required_api("superadmin")
 def delete_user(request):
     if request.method != "DELETE":
         return JsonResponse(
