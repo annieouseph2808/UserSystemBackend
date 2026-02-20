@@ -1,5 +1,4 @@
 from django.core import serializers
-from .models import User
 
 class UserSerializer(serializers.ModelSerialize):
     class Meta:
