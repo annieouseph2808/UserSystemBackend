@@ -16,17 +16,17 @@ def add_user(request):
     password = request.data.get("password")
     role = request.data.get("role")
     if not username or not password or not role:
-        return Response({"error": "All fields required"}, status=400)
+        return Response({"error": "All fields required"}, status=400)#400 as it is a client issue
     
     if User.objects.filter(username=username, is_active = True).exists():
         return JsonResponse(
             {"error": "User already exists"},
-            status=409
+            status=409 #conflict
         )
     try:
         group = Group.objects.get(name=role)
     except Group.DoesNotExist:
-        return Response({"error": "Invalid role"}, status=400)
+        return Response({"error": "Invalid role"}, status=400) #client request issue so 400
     
     user = User.objects.create_user(
         username=username,
