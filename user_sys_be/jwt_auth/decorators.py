@@ -1,4 +1,4 @@
-from jwt_utils import decode_token
+from .jwt_utils import decode_token
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -12,6 +12,7 @@ class JWTAuthGeneric:
         actual_token = auth_header.split(" ",1)[1] #gets the second item which is the token
         try:
             payload = decode_token(actual_token) #calling the cutom decoding function
+            request.jwt_payload = payload
         except ValueError as e:
             return Response({"error":str(e)},status=status.HTTP_401_UNAUTHORIZED)
         #automatic fucntion which is called before every get post etc requests before that we needed to authorize 

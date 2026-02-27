@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('auth/', include('jwt_auth.urls')),   # login lives here
-    path('api/', include('your_app.urls')),    # app related CRUD lives here
+    path('api/', include('user_be_app.urls')),    # app related CRUD lives here
 ]
